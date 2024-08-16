@@ -49,6 +49,10 @@ local plugin_specs = {
   },
 
   {
+    "christoomey/vim-tmux-navigator",
+  },
+
+  {
     "nvim-treesitter/nvim-treesitter",
     enabled = function()
       if vim.g.is_mac then

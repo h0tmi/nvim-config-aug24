@@ -190,6 +190,14 @@ end
 
 if utils.executable("clangd") then
   lspconfig.clangd.setup {
+    cmd = {
+      "clangd",
+      "--enable-config",
+      "--background-index",
+      "-j=4",
+      "--header-insertion=never",
+      "--completion-style=detailed",
+    },
     on_attach = custom_attach,
     capabilities = capabilities,
     filetypes = { "c", "cpp", "cc" },
