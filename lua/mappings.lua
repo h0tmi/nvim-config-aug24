@@ -207,6 +207,16 @@ keymap.set("i", "<C-E>", "<END>")
 -- Go to beginning of command in command-line mode
 keymap.set("c", "<C-A>", "<HOME>")
 
+-- Apply quickfix to current string
+local function quickfix()
+    vim.lsp.buf.code_action({
+        filter = function(a) return a.isPreferred end,
+        apply = true
+    })
+end
+
+-- keymap.set('n', '<leader>qf', quickfix, {desc = 'Apply quickfix to current string'})
+
 -- Delete the character to the right of the cursor
 keymap.set("i", "<C-D>", "<DEL>")
 

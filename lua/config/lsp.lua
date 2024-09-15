@@ -28,6 +28,7 @@ local custom_attach = function(client, bufnr)
   end
 
   map("n", "gd", vim.lsp.buf.definition, { desc = "go to definition" })
+  map("n", "gD", vim.lsp.buf.declaration, { desc = "go to declaration" })
   map("n", "<C-]>", vim.lsp.buf.definition)
   map("n", "K", vim.lsp.buf.hover)
   map("n", "<C-k>", vim.lsp.buf.signature_help)
@@ -188,13 +189,78 @@ if utils.executable("ltex-ls") then
 }
 end
 
+-- if utils.executable("rust-analyzer") then
+--     lspconfig.rust_analyzer.setup {
+--         capabilities = capabilities,
+--         on_attach = lsp.on_attach,
+--     }
+-- end
+
+if utils.executable("rust-analyzer") then
+	require("rust-tools").setup({
+		server = {
+			on_attach = custom_attach,
+			capabilities = capabilities,
+		},
+		tools = {
+			executor = require("rust-tools/executors").termopen, -- can be quickfix or termopen
+			reload_workspace_from_cargo_toml = true,
+			runnables = {
+				use_telescope = true,
+			},
+			inlay_hints = {
+				auto = true,
+				only_current_line = false,
+				show_parameter_hints = true,
+				parameter_hints_prefix = "<-",
+				other_hints_prefix = "=>",
+				max_len_align = false,
+				max_len_align_padding = 1,
+				right_align = false,
+				right_align_padding = 7,
+				highlight = "Comment",
+			},
+			hover_actions = {
+				border = "rounded",
+			},
+			on_initialized = function()
+				vim.api.nvim_create_autocmd({
+					"BufAdd",
+				}, {
+					pattern = { "*.rs" },
+					callback = function()
+						local _, _ = pcall(vim.lsp.codelens.refresh)
+					end,
+				})
+			end,
+		},
+		settings = {
+			["rust-analyzer"] = {
+				lens = {
+					enable = true,
+				},
+				checkOnSave = {
+					enable = true,
+					command = "clippy",
+				},
+				diagnostics = {
+					enable = true,
+				},
+				-- event = "BufReadPost",
+			},
+		},
+	})
+else
+	print("lspconfig: rust-analyzer not found")
+end
+
 if utils.executable("clangd") then
   lspconfig.clangd.setup {
     cmd = {
       "clangd",
       "--enable-config",
       "--background-index",
-      "-j=4",
+      "-j=10",
       "--header-insertion=never",
       "--completion-style=detailed",
     },
@@ -269,17 +335,17 @@ fn.sign_define("DiagnosticSignHint", { text = '', texthl = "DiagnosticSignHin
 -- global config for diagnostic
 diagnostic.config {
   underline = false,
-  virtual_text = false,
+  virtual_text = true,
   signs = true,
   severity_sort = true,
 }
 
--- lsp.handlers["textDocument/publishDiagnostics"] = lsp.with(lsp.diagnostic.on_publish_diagnostics, {
---   underline = false,
---   virtual_text = false,
---   signs = true,
---   update_in_insert = false,
--- })
+lsp.handlers["textDocument/publishDiagnostics"] = lsp.with(lsp.diagnostic.on_publish_diagnostics, {
+  underline = false,
+  virtual_text = false,
+  signs = true,
+  update_in_insert = false,
+})
 
 -- Change border of documentation hover window, See https://github.com/neovim/neovim/pull/13998.
 lsp.handlers["textDocument/hover"] = lsp.with(vim.lsp.handlers.hover, {

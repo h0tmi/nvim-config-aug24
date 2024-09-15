@@ -25,8 +25,7 @@ local plugin_specs = {
   {
     "hrsh7th/nvim-cmp",
     -- event = 'InsertEnter',
-    event = "VeryLazy",
-    dependencies = {
+    event = "VeryLazy", dependencies = {
       "hrsh7th/cmp-nvim-lsp",
       "onsails/lspkind-nvim",
       "hrsh7th/cmp-path",
@@ -490,6 +489,9 @@ local plugin_specs = {
 
   -- Session management plugin
   { "tpope/vim-obsession", cmd = "Obsession" },
+
+  -- Better Rust lsp
+  { "simrat39/rust-tools.nvim" },
 
   {
     "ojroques/vim-oscyank",
