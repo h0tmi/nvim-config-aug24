@@ -254,6 +254,17 @@ else
 	print("lspconfig: rust-analyzer not found")
 end
 
+lspconfig.gopls.setup {
+    on_attach = custom_attach,
+    capabilities = capabilities,
+    filetypes = { "go" },
+    flags = {
+        debounce_text_changes = 500,
+    },
+}
+
+
+
 if utils.executable("clangd") then
   lspconfig.clangd.setup {
     cmd = {

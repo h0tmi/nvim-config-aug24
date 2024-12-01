@@ -8,7 +8,7 @@ gs.setup {
     topdelete = { text = "‾" },
     changedelete = { text = "│" },
   },
-  word_diff = true,
+  word_diff = false,
   on_attach = function(bufnr)
     local function map(mode, l, r, opts)
       opts = opts or {}

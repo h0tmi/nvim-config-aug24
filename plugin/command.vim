@@ -46,5 +46,5 @@ function! s:md_to_pdf() abort
   endif
 endfunction
 
-" json format
+" " json format
 command! -range JSONFormat <line1>,<line2>!python -m json.tool
