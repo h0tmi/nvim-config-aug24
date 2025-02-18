@@ -154,6 +154,14 @@ if utils.executable("pylsp") then
           jedi_completion = { fuzzy = true },
           -- import sorting
           isort = { enabled = true },
+          -- jedi for arcadia
+          jedi = { extra_paths = {
+              '/Users/h0tmi/arcadia',
+              '/Users/h0tmi/arcadia/yt/python',
+              '/Users/h0tmi/arcadia/contrib/libs/protobuf/python',
+              '/Users/h0tmi/arcadia/contrib/python',
+              '/Users/h0tmi/arcadia/saas',
+          } },
         },
       },
     },
