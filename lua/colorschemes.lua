@@ -7,61 +7,68 @@ local M = {}
 -- Colorscheme to its directory name mapping, because colorscheme repo name is not necessarily
 -- the same as the colorscheme name itself.
 M.colorscheme_conf = {
-  onedark = function()
-    vim.cmd([[colorscheme onedark]])
-  end,
-  edge = function()
-    vim.g.edge_enable_italic = 1
-    vim.g.edge_better_performance = 1
+  -- onedark = function()
+  --   vim.cmd([[colorscheme onedark]])
+  -- end,
+  --edge = function()
+  --  vim.g.edge_enable_italic = 1
+  --  vim.g.edge_better_performance = 1
 
-    vim.cmd([[colorscheme edge]])
-  end,
-  sonokai = function()
-    vim.g.sonokai_enable_italic = 1
-    vim.g.sonokai_better_performance = 1
+  --  vim.cmd([[colorscheme edge]])
+  --end,
+  --sonokai = function()
+  --  vim.g.sonokai_enable_italic = 1
+  --  vim.g.sonokai_better_performance = 1
 
-    vim.cmd([[colorscheme sonokai]])
-  end,
-  gruvbox_material = function()
-    -- foreground option can be material, mix, or original
-    vim.g.gruvbox_material_foreground = "original"
-    --background option can be hard, medium, soft
-    vim.g.gruvbox_material_background = "medium"
-    vim.g.gruvbox_material_enable_italic = 1
-    vim.g.gruvbox_material_better_performance = 1
+  --  vim.cmd([[colorscheme sonokai]])
+  --end,
+  --gruvbox_material = function()
+  --  -- foreground option can be material, mix, or original
+  --  vim.g.gruvbox_material_foreground = "original"
+  --  --background option can be hard, medium, soft
+  --  vim.g.gruvbox_material_background = "medium"
+  --  vim.g.gruvbox_material_enable_italic = 1
+  --  vim.g.gruvbox_material_better_performance = 1
 
-    vim.cmd([[colorscheme gruvbox-material]])
-  end,
-  everforest = function()
-    vim.g.everforest_enable_italic = 1
-    vim.g.everforest_better_performance = 1
+  --  vim.cmd([[colorscheme gruvbox-material]])
+  --end,
+  --everforest = function()
+  --  vim.g.everforest_enable_italic = 1
+  --  vim.g.everforest_better_performance = 1
 
-    vim.cmd([[colorscheme everforest]])
-  end,
+  --  vim.cmd([[colorscheme everforest]])
+  --end,
+
+  -- Change if you want black
+  -- TODO(h0tmi): add shortcut to toggle from white to black easily
+
+  -- nightfox = function()
+  --   vim.cmd([[colorscheme nordfox]])
+  -- end,
   nightfox = function()
-    vim.cmd([[colorscheme nordfox]])
+    vim.cmd([[colorscheme dayfox]])
   end,
-  catppuccin = function()
-    -- available option: latte, frappe, macchiato, mocha
-    vim.g.catppuccin_flavour = "frappe"
-    require("catppuccin").setup()
+  --catppuccin = function()
+  --  -- available option: latte, frappe, macchiato, mocha
+  --  vim.g.catppuccin_flavour = "frappe"
+  --  require("catppuccin").setup()
 
-    vim.cmd([[colorscheme catppuccin]])
-  end,
-  onedarkpro = function()
-    -- set colorscheme after options
-    vim.cmd('colorscheme onedark_vivid')
-  end,
-  material = function()
-    vim.g.material_style = "oceanic"
-    vim.cmd('colorscheme material')
-  end,
-  arctic = function ()
-    vim.cmd("colorscheme arctic")
-  end,
-  kanagawa = function()
-    vim.cmd("colorscheme kanagawa-wave")
-  end
+  --  vim.cmd([[colorscheme catppuccin]])
+  --end,
+  --onedarkpro = function()
+  --  -- set colorscheme after options
+  --  vim.cmd('colorscheme onedark_vivid')
+  --end,
+  --material = function()
+  --  vim.g.material_style = "oceanic"
+  --  vim.cmd('colorscheme material')
+  --end,
+  --arctic = function ()
+  --  vim.cmd("colorscheme arctic")
+  --end,
+  --kanagawa = function()
+  --  vim.cmd("colorscheme kanagawa-wave")
+  --end
 }
 
 --- Use a random colorscheme from the pre-defined list of colorschemes.
