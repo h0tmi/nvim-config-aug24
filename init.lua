@@ -14,7 +14,7 @@ vim.loader.enable()
 local version = vim.version
 
 -- check if we have the latest stable version of nvim
-local expected_ver_str = "0.10.4"
+local expected_ver_str = "0.10.2"
 local expect_ver = version.parse(expected_ver_str)
 local actual_ver = vim.version()
 

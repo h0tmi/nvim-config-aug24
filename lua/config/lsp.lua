@@ -276,16 +276,15 @@ lspconfig.gopls.setup {
 if utils.executable("clangd") then
   lspconfig.clangd.setup {
     cmd = {
-      "clangd",
-      "--enable-config",
+      "clangd-19",
       "--background-index",
-      "-j=10",
+      "-j=15",
       "--header-insertion=never",
       "--completion-style=detailed",
     },
     on_attach = custom_attach,
     capabilities = capabilities,
-    filetypes = { "c", "cpp", "cc" },
+    filetypes = { "c", "cpp", "hpp", "objc", "objcpp", "cuda", "proto","hpp"},
     flags = {
       debounce_text_changes = 500,
     },
