@@ -45,16 +45,16 @@ M.colorscheme_conf = {
   -- nightfox = function()
   --   vim.cmd([[colorscheme nordfox]])
   -- end,
-  nightfox = function()
-    vim.cmd([[colorscheme dayfox]])
-  end,
-  --catppuccin = function()
-  --  -- available option: latte, frappe, macchiato, mocha
-  --  vim.g.catppuccin_flavour = "frappe"
-  --  require("catppuccin").setup()
+  -- nightfox = function()
+  --   vim.cmd([[colorscheme dayfox]])
+  -- end,
+  catppuccin = function()
+    -- available option: latte, frappe, macchiato, mocha
+    vim.g.catppuccin_flavour = "mocha"
+    require("catppuccin").setup()
 
-  --  vim.cmd([[colorscheme catppuccin]])
-  --end,
+    vim.cmd([[colorscheme catppuccin]])
+  end,
   --onedarkpro = function()
   --  -- set colorscheme after options
   --  vim.cmd('colorscheme onedark_vivid')

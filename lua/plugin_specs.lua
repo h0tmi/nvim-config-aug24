@@ -39,6 +39,14 @@ local plugin_specs = {
     end,
   },
 
+  -- {
+  --   "segoon/arc-locator.nvim",
+  -- },
+
+  {
+    "segoon/goto-arcanum.nvim",
+  },
+
   {
     "neovim/nvim-lspconfig",
     event = { "BufRead", "BufNewFile" },

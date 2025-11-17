@@ -246,3 +246,6 @@ keymap.set("n", "<leader>cb", function()
   )
 end,
   { desc = "show cursor" })
+
+-- Go to arcanum
+keymap.set("n", "<leader>ar", ":OpenInArcanum<Enter>")
