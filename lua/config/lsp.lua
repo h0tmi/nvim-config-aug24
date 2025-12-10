@@ -117,20 +117,26 @@ capabilities.textDocument.foldingRange = {
     lineFoldingOnly = true
 }
 
-local lspconfig = require("lspconfig")
+-- ============================================================================
+-- LSP Server Configurations (New API - Neovim 0.11+)
+-- ============================================================================
 
+-- Python LSP (pylsp)
 if utils.executable("pylsp") then
   local venv_path = os.getenv('VIRTUAL_ENV')
   local py_path = nil
-  -- decide which python executable to use for mypy
+  
   if venv_path ~= nil then
     py_path = venv_path .. "/bin/python3"
   else
     py_path = vim.g.python3_host_prog
   end
 
-  lspconfig.pylsp.setup {
-    on_attach = custom_attach,
+  vim.lsp.config.pylsp = {
+    cmd = { 'pylsp' },
+    filetypes = { 'python' },
+    root_markers = { 'pyproject.toml', 'setup.py', 'setup.cfg', '.git' },
+    capabilities = capabilities,
     settings = {
       pylsp = {
         plugins = {
@@ -145,7 +151,7 @@ if utils.executable("pylsp") then
           pycodestyle = { enabled = false },
           -- type checker
           pylsp_mypy = {
-            enabled = true,
+            enabled = false,
             overrides = { "--python-executable", py_path, true },
             report_progress = true,
             live_mode = false
@@ -165,161 +171,169 @@ if utils.executable("pylsp") then
         },
       },
     },
-    flags = {
-      debounce_text_changes = 200,
-    },
-    capabilities = capabilities,
   }
+  
+  vim.lsp.enable('pylsp')
 else
   vim.notify("pylsp not found!", vim.log.levels.WARN, { title = "Nvim-config" })
 end
 
--- if utils.executable('pyright') then
---   lspconfig.pyright.setup{
---     on_attach = custom_attach,
---     capabilities = capabilities
---   }
--- else
---   vim.notify("pyright not found!", vim.log.levels.WARN, {title = 'Nvim-config'})
--- end
-
+-- LaTeX LSP (ltex)
 if utils.executable("ltex-ls") then
-  lspconfig.ltex.setup {
-    on_attach = custom_attach,
+  vim.lsp.config.ltex = {
     cmd = { "ltex-ls" },
     filetypes = { "text", "plaintex", "tex", "markdown" },
+    root_markers = { '.git' },
+    capabilities = capabilities,
     settings = {
       ltex = {
         language = "en"
       },
     },
-    flags = { debounce_text_changes = 300 },
-}
-end
-
--- if utils.executable("rust-analyzer") then
---     lspconfig.rust_analyzer.setup {
---         capabilities = capabilities,
---         on_attach = lsp.on_attach,
---     }
--- end
-
-if utils.executable("rust-analyzer") then
-	require("rust-tools").setup({
-		server = {
-			on_attach = custom_attach,
-			capabilities = capabilities,
-		},
-		tools = {
-			executor = require("rust-tools/executors").termopen, -- can be quickfix or termopen
-			reload_workspace_from_cargo_toml = true,
-			runnables = {
-				use_telescope = true,
-			},
-			inlay_hints = {
-				auto = true,
-				only_current_line = false,
-				show_parameter_hints = true,
-				parameter_hints_prefix = "<-",
-				other_hints_prefix = "=>",
-				max_len_align = false,
-				max_len_align_padding = 1,
-				right_align = false,
-				right_align_padding = 7,
-				highlight = "Comment",
-			},
-			hover_actions = {
-				border = "rounded",
-			},
-			on_initialized = function()
-				vim.api.nvim_create_autocmd({
-					"BufAdd",
-				}, {
-					pattern = { "*.rs" },
-					callback = function()
-						local _, _ = pcall(vim.lsp.codelens.refresh)
-					end,
-				})
-			end,
-		},
-		settings = {
-			["rust-analyzer"] = {
-				lens = {
-					enable = true,
-				},
-				checkOnSave = {
-					enable = true,
-					command = "clippy",
-				},
-				diagnostics = {
-					enable = true,
-				},
-				-- event = "BufReadPost",
-			},
-		},
-	})
+  }
+  
+  vim.lsp.enable('ltex')
 else
-	print("lspconfig: rust-analyzer not found")
+  vim.notify("ltex-ls not found!", vim.log.levels.WARN, { title = "Nvim-config" })
 end
 
-lspconfig.gopls.setup {
-    on_attach = custom_attach,
+-- Rust LSP (rust-analyzer)
+if utils.executable("rust-analyzer") then
+  vim.lsp.config.rust_analyzer = {
+    cmd = { 'rust-analyzer' },
+    filetypes = { 'rust' },
+    root_markers = { 'Cargo.toml', 'rust-project.json' },
     capabilities = capabilities,
-    filetypes = { "go" },
-    flags = {
-        debounce_text_changes = 500,
+    settings = {
+      ["rust-analyzer"] = {
+        lens = {
+          enable = true,
+        },
+        checkOnSave = {
+          enable = true,
+          command = "clippy",
+        },
+        diagnostics = {
+          enable = true,
+        },
+        cargo = {
+          allFeatures = true,
+        },
+        inlayHints = {
+          parameterHints = {
+            enable = true,
+          },
+          typeHints = {
+            enable = true,
+          },
+        },
+      },
     },
-}
+  }
+  
+  vim.lsp.enable('rust_analyzer')
+else
+  vim.notify("rust-analyzer not found!", vim.log.levels.WARN, { title = "Nvim-config" })
+end
 
+-- Go LSP (gopls)
+if utils.executable("gopls") then
+  vim.lsp.config.gopls = {
+    cmd = { 'gopls' },
+    filetypes = { "go", "gomod", "gowork", "gotmpl" },
+    root_markers = { 'go.work', 'go.mod', '.git' },
+    capabilities = capabilities,
+    settings = {
+      gopls = {
+        analyses = {
+          unusedparams = true,
+        },
+        staticcheck = true,
+      },
+    },
+  }
+  
+  vim.lsp.enable('gopls')
+else
+  vim.notify("gopls not found!", vim.log.levels.WARN, { title = "Nvim-config" })
+end
 
-
+-- C/C++ LSP (clangd)
 if utils.executable("clangd") then
-  lspconfig.clangd.setup {
+  vim.lsp.config.clangd = {
     cmd = {
-      "clangd-19",
+      "clangd",
       "--background-index",
       "-j=15",
       "--header-insertion=never",
       "--completion-style=detailed",
     },
-    on_attach = custom_attach,
-    capabilities = capabilities,
-    filetypes = { "c", "cpp", "hpp", "objc", "objcpp", "cuda", "proto","hpp"},
-    flags = {
-      debounce_text_changes = 500,
+    filetypes = { "c", "cpp", "hpp", "objc", "objcpp", "cuda", "proto" },
+    root_markers = { 
+      '.clangd', 
+      '.clang-tidy', 
+      '.clang-format', 
+      'compile_commands.json', 
+      'compile_flags.txt', 
+      'configure.ac', 
+      '.git' 
     },
+    capabilities = capabilities,
   }
+  
+  vim.lsp.enable('clangd')
+else
+  vim.notify("clangd not found!", vim.log.levels.WARN, { title = "Nvim-config" })
 end
 
--- set up vim-language-server
+-- Vim LSP (vimls)
 if utils.executable("vim-language-server") then
-  lspconfig.vimls.setup {
-    on_attach = custom_attach,
-    flags = {
-      debounce_text_changes = 500,
-    },
+  vim.lsp.config.vimls = {
+    cmd = { 'vim-language-server', '--stdio' },
+    filetypes = { 'vim' },
+    root_markers = { '.git' },
     capabilities = capabilities,
   }
+  
+  vim.lsp.enable('vimls')
 else
   vim.notify("vim-language-server not found!", vim.log.levels.WARN, { title = "Nvim-config" })
 end
 
--- set up bash-language-server
+-- Bash LSP (bashls)
 if utils.executable("bash-language-server") then
-  lspconfig.bashls.setup {
-    on_attach = custom_attach,
+  vim.lsp.config.bashls = {
+    cmd = { 'bash-language-server', 'start' },
+    filetypes = { 'sh', 'bash' },
+    root_markers = { '.git' },
     capabilities = capabilities,
   }
+  
+  vim.lsp.enable('bashls')
+else
+  vim.notify("bash-language-server not found!", vim.log.levels.WARN, { title = "Nvim-config" })
 end
 
+-- Lua LSP (lua_ls)
 if utils.executable("lua-language-server") then
-  -- settings for lua-language-server can be found on https://github.com/LuaLS/lua-language-server/wiki/Settings .
-  lspconfig.lua_ls.setup {
-    on_attach = custom_attach,
+  vim.lsp.config.lua_ls = {
+    cmd = { 'lua-language-server' },
+    filetypes = { 'lua' },
+    root_markers = { 
+      '.luarc.json', 
+      '.luarc.jsonc', 
+      '.luacheckrc', 
+      '.stylua.toml', 
+      'stylua.toml', 
+      'selene.toml', 
+      'selene.yml', 
+      '.git' 
+    },
+    capabilities = capabilities,
     settings = {
       Lua = {
         runtime = {
-          -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+          -- Tell the language server which version of Lua you're using
           version = "LuaJIT",
         },
         diagnostics = {
@@ -327,8 +341,7 @@ if utils.executable("lua-language-server") then
           globals = { "vim" },
         },
         workspace = {
-          -- Make the server aware of Neovim runtime files,
-          -- see also https://luals.github.io/wiki/settings/#workspacelibrary
+          -- Make the server aware of Neovim runtime files
           library = {
             vim.env.VIMRUNTIME,
             fn.stdpath("config"),
@@ -338,19 +351,41 @@ if utils.executable("lua-language-server") then
           maxPreload = 2000,
           preloadFileSize = 50000,
         },
+        telemetry = {
+          enable = false,
+        },
       },
     },
-    capabilities = capabilities,
   }
+  
+  vim.lsp.enable('lua_ls')
+else
+  vim.notify("lua-language-server not found!", vim.log.levels.WARN, { title = "Nvim-config" })
 end
 
--- Change diagnostic signs.
+-- ============================================================================
+-- Global LSP Attach Handler
+-- ============================================================================
+
+-- Single LspAttach autocmd for all servers
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    custom_attach(client, args.buf)
+  end,
+})
+
+-- ============================================================================
+-- Diagnostic Configuration
+-- ============================================================================
+
+-- Change diagnostic signs
 fn.sign_define("DiagnosticSignError", { text = '🆇', texthl = "DiagnosticSignError" })
 fn.sign_define("DiagnosticSignWarn", { text = '⚠️', texthl = "DiagnosticSignWarn" })
 fn.sign_define("DiagnosticSignInfo", { text = 'ℹ️', texthl = "DiagnosticSignInfo" })
-fn.sign_define("DiagnosticSignHint", { text = '', texthl = "DiagnosticSignHint" })
+fn.sign_define("DiagnosticSignHint", { text = '', texthl = "DiagnosticSignHint" })
 
--- global config for diagnostic
+-- Global config for diagnostic
 diagnostic.config {
   underline = false,
   virtual_text = true,
@@ -358,6 +393,7 @@ diagnostic.config {
   severity_sort = true,
 }
 
+-- Configure diagnostic display
 lsp.handlers["textDocument/publishDiagnostics"] = lsp.with(lsp.diagnostic.on_publish_diagnostics, {
   underline = false,
   virtual_text = false,
@@ -365,7 +401,12 @@ lsp.handlers["textDocument/publishDiagnostics"] = lsp.with(lsp.diagnostic.on_pub
   update_in_insert = false,
 })
 
--- Change border of documentation hover window, See https://github.com/neovim/neovim/pull/13998.
+-- Change border of documentation hover window
 lsp.handlers["textDocument/hover"] = lsp.with(vim.lsp.handlers.hover, {
+  border = "rounded",
+})
+
+-- Change border of signature help window
+lsp.handlers["textDocument/signatureHelp"] = lsp.with(vim.lsp.handlers.signature_help, {
   border = "rounded",
 })
