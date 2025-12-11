@@ -23,6 +23,7 @@ M.colorscheme_conf = {
   --  vim.cmd([[colorscheme sonokai]])
   --end,
   --gruvbox_material = function()
+  --  -- night/white theme
   --  -- foreground option can be material, mix, or original
   --  vim.g.gruvbox_material_foreground = "original"
   --  --background option can be hard, medium, soft
