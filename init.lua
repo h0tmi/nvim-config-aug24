@@ -13,7 +13,7 @@ vim.loader.enable()
 
 local version = vim.version
 
-local expected_ver_str = "0.11.5"
+local expected_ver_str = "0.11.0"
 local expect_ver = version.parse(expected_ver_str)
 local actual_ver = vim.version()
 

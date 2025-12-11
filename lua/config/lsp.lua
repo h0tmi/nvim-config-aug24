@@ -194,7 +194,7 @@ if utils.executable("ltex-ls") then
   
   vim.lsp.enable('ltex')
 else
-  vim.notify("ltex-ls not found!", vim.log.levels.WARN, { title = "Nvim-config" })
+  -- vim.notify("ltex-ls not found!", vim.log.levels.WARN, { title = "Nvim-config" })
 end
 
 -- Rust LSP (rust-analyzer)
@@ -311,7 +311,7 @@ if utils.executable("bash-language-server") then
   
   vim.lsp.enable('bashls')
 else
-  vim.notify("bash-language-server not found!", vim.log.levels.WARN, { title = "Nvim-config" })
+  -- vim.notify("bash-language-server not found!", vim.log.levels.WARN, { title = "Nvim-config" })
 end
 
 -- Lua LSP (lua_ls)
@@ -360,7 +360,7 @@ if utils.executable("lua-language-server") then
   
   vim.lsp.enable('lua_ls')
 else
-  vim.notify("lua-language-server not found!", vim.log.levels.WARN, { title = "Nvim-config" })
+  -- vim.notify("lua-language-server not found!", vim.log.levels.WARN, { title = "Nvim-config" })
 end
 
 -- ============================================================================
